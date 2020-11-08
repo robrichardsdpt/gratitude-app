@@ -1,1 +1,7 @@
+$primary: steelblue;
+@import url('https://fonts.googleapis.com/css2?family=Seaweed+Script&display=swap');
 @import '~bootstrap/scss/bootstrap';
+
+.title {
+  font-family: 'Seaweed Script', cursive;
+}
