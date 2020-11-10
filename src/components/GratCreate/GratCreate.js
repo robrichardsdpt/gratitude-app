@@ -8,6 +8,7 @@ import messages from '../AutoDismissAlert/messages'
 class GratCreate extends React.Component {
   constructor (props) {
     super(props)
+    console.log(this.props)
     this.state = {
       user: this.props.user,
       gratitude: {
@@ -38,7 +39,7 @@ class GratCreate extends React.Component {
 
   handleSubmit = (event) => {
     event.preventDefault()
-    const { msgAlert, history } = this.props
+    const { msgAlert } = this.props
     const gratitude = this.state.gratitude
     axios({
       url: `${apiUrl}/gratitudes/`,
@@ -59,7 +60,6 @@ class GratCreate extends React.Component {
         message: messages.uploadGratSuccess,
         variant: 'success'
       }))
-      .then(() => history.push('/dashboard'))
       .catch(error => {
         msgAlert({
           heading: 'Could not upload your gratitude, failed with error: ' + error.messages,
@@ -71,18 +71,12 @@ class GratCreate extends React.Component {
   render () {
     return (
       <div className='top-of-create'>
-        <h1 className='email-addy'>{this.props.user.email}</h1>
-        <div className='create-stack'>
-          <div className='create-header'>
-            <h3 className= 'name'>Add a client</h3>
-          </div>
-          <div className='col'>
-            <Form onSubmit={this.handleSubmit} >
-              <Form.Label className='text'><h5>What are you grateful for today?</h5></Form.Label>
-              <Form.Control name="text" id="text" onChange={this.handleChange} type="text" placeholder="Today I am grateful for..." />
-              <Button variant='primary' type="submit" className='create-submit'> Submit </Button>
-            </Form>
-          </div>
+        <div className='col'>
+          <Form onSubmit={this.handleSubmit} >
+            <Form.Label className='textLabel'><h5>What are you grateful for today?</h5></Form.Label>
+            <Form.Control name="text" id="text" onChange={this.handleChange} type="text" placeholder="Today I am grateful for..." />
+            <Button variant='primary' type="submit" className='create-submit'> Submit </Button>
+          </Form>
         </div>
       </div>
     )
