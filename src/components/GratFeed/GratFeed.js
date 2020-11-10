@@ -6,6 +6,8 @@ import GratCreate from '../GratCreate/GratCreate'
 import messages from '../AutoDismissAlert/messages'
 import moment from 'moment'
 import { BsThreeDotsVertical } from 'react-icons/bs'
+import { BiCommentAdd } from 'react-icons/bi'
+import { AiOutlineHeart } from 'react-icons/ai'
 
 class GratFeed extends React.Component {
   constructor (props) {
@@ -127,7 +129,11 @@ class GratFeed extends React.Component {
             </div>
           </div>
           <div className='grat-feed-text'>
-            {gratitude.text}
+            {gratitude.text}<br/>
+          </div>
+          <div className="row">
+            <div className="col-10 heart"><AiOutlineHeart/></div>
+            <div className='col-2 comment-bubble'><BiCommentAdd/></div>
           </div>
         </div>
       )
