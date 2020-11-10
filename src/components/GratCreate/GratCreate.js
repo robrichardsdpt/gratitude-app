@@ -26,7 +26,7 @@ class GratCreate extends React.Component {
     return (
       <div className='top-of-create'>
         <div className='col'>
-          <Form onSubmit={this.props.handleSubmit} >
+          <Form className='gratCreateform' onSubmit={this.props.handleSubmit} >
             <Form.Label className='textLabel'><h5>What are you grateful for today?</h5></Form.Label>
             <Form.Control name="text" id="text" onChange={this.props.handleChange} type="text" placeholder="Today I am grateful for..." />
             <Button variant='primary' type="submit" className='create-submit'> Submit </Button>

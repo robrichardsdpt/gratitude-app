@@ -5,9 +5,13 @@ import { Link } from 'react-router-dom'
 import GratCreate from '../GratCreate/GratCreate'
 import messages from '../AutoDismissAlert/messages'
 import moment from 'moment'
-import { BsThreeDotsVertical } from 'react-icons/bs'
 import { BiCommentAdd } from 'react-icons/bi'
 import { AiOutlineHeart } from 'react-icons/ai'
+import InputGroup from 'react-bootstrap/InputGroup'
+import DropdownButton from 'react-bootstrap/DropdownButton'
+import Dropdown from 'react-bootstrap/Dropdown'
+import GratEdit from '../GratEdit/GratEdit'
+import GratDelete from '../GratDelete/GratDelete'
 
 class GratFeed extends React.Component {
   constructor (props) {
@@ -20,9 +24,36 @@ class GratFeed extends React.Component {
         text: '',
         created_at: '',
         owner: ''
-      }
+      },
+      showEdit: false,
+      showDelete: false
     }
   }
+
+  showEditModal = () => {
+    this.setState({
+      showEdit: true
+    })
+  }
+
+    hideEditModal = () => {
+      this.setState({
+        showEdit: false
+      })
+    }
+
+    showDeleteModal = () => {
+      this.setState({
+        showDelete: true
+      })
+    }
+
+      hideDeleteModal = () => {
+        this.setState({
+          showDelete: false
+        })
+      }
+
   // handles all user input
   handleChange = (event) => {
     // get the value that the user typed in
@@ -122,7 +153,30 @@ class GratFeed extends React.Component {
         <div key={gratitude.id} size="4" className="gratfeed">
           <div className='card-header'>
             <div className='owner'>
-              <Link to={`/gratlist/${gratitude.owner}`}><h5 className= 'grat-owner'>{gratOwner}</h5></Link> <span className='editbtn'><BsThreeDotsVertical/></span>
+              <Link to={`/gratlist/${gratitude.owner}`}><h5 className= 'grat-owner'>{gratOwner}</h5></Link>
+              <span className='editbtn'><DropdownButton
+                as={InputGroup.Prepend}
+                variant="primary"
+                id="input-group-dropdown-1"
+                title='...'
+              >
+                <Dropdown.Item name='edit' onClick={this.showEditModal}>Edit</Dropdown.Item>
+                <Dropdown.Item name='delete' onClick={this.showDeleteModal}>Delete</Dropdown.Item>
+                <Dropdown.Item name='cancel'>Cancel</Dropdown.Item>
+              </DropdownButton></span>
+              <GratEdit
+                user={this.state.user}
+                show={this.state.showEdit}
+                gratitude={this.state.gratitude}
+                handleClose={this.hideEditModal}
+                handleEditSubmit={this.handleEditSubmit}
+                handleEditChanges={this.handEditChanges}/>
+              <GratDelete
+                user={this.state.user}
+                show={this.state.showDelete}
+                gratitude={this.state.gratitude}
+                handleClose={this.hideDeleteModal}
+                handleEditSubmit={this.handleDeleteSubmit}/>
             </div>
             <div className='grat-feed-create-date'>
               {moment(gratitude.created_at).format('LLLL')}
