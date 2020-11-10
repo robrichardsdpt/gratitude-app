@@ -5,3 +5,22 @@ $primary: steelblue;
 .title {
   font-family: 'Seaweed Script', cursive;
 }
+
+.grat-feed-text {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 60px;
+}
+
+.grat-feed-create-date {
+  color: #555555;
+  font-style: italic;
+}
+
+.gratfeed {
+  border: solid 1px gray;
+  border-radius: 3px;
+  padding-bottom: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}

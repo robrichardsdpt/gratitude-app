@@ -42,13 +42,24 @@ class GratFeed extends React.Component {
   }
 
   render () {
-    console.log(this.state.users)
     const jsxGratitudeList = this.state.gratitudes.map(gratitude => {
+      let gratOwner = ''
+      for (let i = 0; i < this.state.users.length; i++) {
+        if (gratitude.owner === this.state.users[i].id) {
+          gratOwner = this.state.users[i].email
+        }
+      }
       return (
         <div key={gratitude.id} size="4" className="gratfeed">
           <div className='card-header'>
-            <Link to={`/gratlist/${gratitude.owner}`}><h5 className= 'grat-owner'>{gratitude.owner}</h5></Link>
-            {gratitude.created_at}
+            <div className='owner'>
+              <Link to={`/gratlist/${gratitude.owner}`}><h5 className= 'grat-owner'>{gratOwner}</h5></Link>
+            </div>
+            <div className='grat-feed-create-date'>
+              {gratitude.created_at}
+            </div>
+          </div>
+          <div className='grat-feed-text'>
             {gratitude.text}
           </div>
         </div>
