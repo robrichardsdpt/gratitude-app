@@ -24,3 +24,19 @@ $primary: steelblue;
   margin-top: 10px;
   margin-bottom: 10px;
 }
+.owner {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+a:hover {
+  text-decoration: none;
+}
+.editbtn {
+  color: steelblue;
+  font-size: 20px;
+}
+.editbtn:hover {
+  color: navy;
+  cursor: pointer;
+}

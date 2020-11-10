@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import GratCreate from '../GratCreate/GratCreate'
 import messages from '../AutoDismissAlert/messages'
 import moment from 'moment'
+import { BsThreeDotsVertical } from 'react-icons/bs'
 
 class GratFeed extends React.Component {
   constructor (props) {
@@ -119,7 +120,7 @@ class GratFeed extends React.Component {
         <div key={gratitude.id} size="4" className="gratfeed">
           <div className='card-header'>
             <div className='owner'>
-              <Link to={`/gratlist/${gratitude.owner}`}><h5 className= 'grat-owner'>{gratOwner}</h5></Link>
+              <Link to={`/gratlist/${gratitude.owner}`}><h5 className= 'grat-owner'>{gratOwner}</h5></Link> <span className='editbtn'><BsThreeDotsVertical/></span>
             </div>
             <div className='grat-feed-create-date'>
               {moment(gratitude.created_at).format('LLLL')}
