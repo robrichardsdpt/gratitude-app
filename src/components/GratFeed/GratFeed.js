@@ -3,6 +3,7 @@ import axios from 'axios'
 import apiUrl from '../../apiConfig'
 import { Link } from 'react-router-dom'
 import GratCreate from '../GratCreate/GratCreate'
+import messages from '../AutoDismissAlert/messages'
 
 class GratFeed extends React.Component {
   constructor (props) {
@@ -10,8 +11,72 @@ class GratFeed extends React.Component {
     this.state = {
       user: this.props.user,
       gratitudes: [],
-      users: []
+      users: [],
+      gratitude: {
+        text: '',
+        created_at: '',
+        owner: ''
+      }
     }
+  }
+  // handles all user input
+  handleChange = (event) => {
+    // get the value that the user typed in
+    const userInput = event.target.value
+    // get the name of the input that the user typed in
+    const gratKey = event.target.name
+    // make a copy of the state
+    const gratCopy = Object.assign({}, this.state.gratitude) // to get the original state of the run and to copy it into another object to bypass inability to assign to a state
+    // Object.assign({}, object-to-copy) allows you to combine two objects
+    // updating the key in our state with what the user typed in
+    gratCopy[gratKey] = userInput
+    // updating the state with our new copy
+    this.setState({ gratitude: gratCopy
+    })
+  }
+  handleSubmit = (event) => {
+    event.preventDefault()
+    const { msgAlert } = this.props
+    const gratitude = this.state.gratitude
+    axios({
+      url: `${apiUrl}/gratitudes/`,
+      method: 'POST',
+      headers: {
+        Authorization: 'Token ' + `${this.state.user.token}`
+      },
+      data: {
+        gratitude: gratitude
+      }
+    })
+      .then((response) => {
+        this.setState({
+          createdGratitudeId: response.data.gratitude.id
+        })
+        return axios({
+          url: `${apiUrl}/gratitudes/`,
+          method: 'GET',
+          headers: {
+            Authorization: 'Token ' + `${this.state.user.token}`
+          }
+        })
+          .then(response => {
+            this.setState({
+              gratitudes: response.data.gratitudes
+            })
+          })
+      })
+      .then(() => msgAlert({
+        heading: 'New Gratitude Added With Success',
+        message: messages.uploadGratSuccess,
+        variant: 'success'
+      }))
+      .catch(error => {
+        msgAlert({
+          heading: 'Could not upload your gratitude, failed with error: ' + error.messages,
+          message: messages.uploadGratFailure,
+          variant: 'danger'
+        })
+      })
   }
   componentDidMount () {
     axios({
@@ -67,7 +132,7 @@ class GratFeed extends React.Component {
     })
     return (
       <div className='container'>
-        <GratCreate user={this.state.user} msgAlert={this.props.msgAlert}/>
+        <GratCreate user={this.state.user} msgAlert={this.props.msgAlert} handleSubmit={this.handleSubmit} handleChange={this.handleChange}/>
         {jsxGratitudeList}
       </div>
     )
