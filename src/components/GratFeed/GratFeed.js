@@ -67,7 +67,7 @@ class GratFeed extends React.Component {
     })
     return (
       <div className='container'>
-        <GratCreate user={this.state.user}/>
+        <GratCreate user={this.state.user} msgAlert={this.props.msgAlert}/>
         {jsxGratitudeList}
       </div>
     )
