@@ -51,10 +51,10 @@ class App extends Component {
           <Route path='/sign-in' render={() => (
             <SignIn msgAlert={this.msgAlert} setUser={this.setUser} />
           )} />
-          <AuthenticatedRoute user={user} path='/' render={() => (
+          <AuthenticatedRoute user={user} path='/create' render={() => (
             <GratCreate user={user} />
           )} />
-          <AuthenticatedRoute user={user} path='/home' render={() => (
+          <AuthenticatedRoute user={user} path='/' render={() => (
             <GratFeed user={user} />
           )} />
           <AuthenticatedRoute user={user} path='/gratlist' render={() => (

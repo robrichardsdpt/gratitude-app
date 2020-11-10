@@ -7,7 +7,7 @@ class GratFeed extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      user: this.state.props.user,
+      user: this.props.user,
       gratitudes: []
     }
   }
@@ -28,7 +28,7 @@ class GratFeed extends React.Component {
   }
 
   render () {
-    const jsxGratitudeList = this.state.clients.map(gratitude => {
+    const jsxGratitudeList = this.state.gratitudes.map(gratitude => {
       return (
         <div key={gratitude.id} size="4" className="gratfeed">
           <div className='card-header'>
