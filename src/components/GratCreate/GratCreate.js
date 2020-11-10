@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import apiUrl from '../../apiConfig'
-import Form from 'react-bootstrap/Col'
+import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import messages from '../AutoDismissAlert/messages'
 

@@ -2,6 +2,7 @@ import React from 'react'
 import axios from 'axios'
 import apiUrl from '../../apiConfig'
 import { Link } from 'react-router-dom'
+import GratCreate from '../GratCreate/GratCreate'
 
 class GratFeed extends React.Component {
   constructor (props) {
@@ -33,6 +34,7 @@ class GratFeed extends React.Component {
         <div key={gratitude.id} size="4" className="gratfeed">
           <div className='card-header'>
             <Link to={`/gratlist/${gratitude.owner}`}><h5 className= 'grat-owner'>{gratitude.owner}</h5></Link>
+            {gratitude.created_at}
             {gratitude.text}
           </div>
         </div>
@@ -40,6 +42,7 @@ class GratFeed extends React.Component {
     })
     return (
       <div className='container'>
+        <GratCreate user={this.state.user}/>
         {jsxGratitudeList}
       </div>
     )
