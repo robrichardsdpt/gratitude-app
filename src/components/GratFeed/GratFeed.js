@@ -4,6 +4,7 @@ import apiUrl from '../../apiConfig'
 import { Link } from 'react-router-dom'
 import GratCreate from '../GratCreate/GratCreate'
 import messages from '../AutoDismissAlert/messages'
+import moment from 'moment'
 
 class GratFeed extends React.Component {
   constructor (props) {
@@ -121,7 +122,7 @@ class GratFeed extends React.Component {
               <Link to={`/gratlist/${gratitude.owner}`}><h5 className= 'grat-owner'>{gratOwner}</h5></Link>
             </div>
             <div className='grat-feed-create-date'>
-              {gratitude.created_at}
+              {moment(gratitude.created_at).format('LLLL')}
             </div>
           </div>
           <div className='grat-feed-text'>
