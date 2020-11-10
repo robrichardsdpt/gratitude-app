@@ -9,7 +9,8 @@ class GratFeed extends React.Component {
     super(props)
     this.state = {
       user: this.props.user,
-      gratitudes: []
+      gratitudes: [],
+      users: []
     }
   }
   componentDidMount () {
@@ -24,11 +25,24 @@ class GratFeed extends React.Component {
         this.setState({
           gratitudes: response.data.gratitudes
         })
+        return axios({
+          url: `${apiUrl}/users/`,
+          method: 'GET',
+          headers: {
+            Authorization: 'Token ' + `${this.state.user.token}`
+          }
+        })
+          .then(response => {
+            this.setState({
+              users: response.data.users
+            })
+          })
       })
       .catch(console.error)
   }
 
   render () {
+    console.log(this.state.users)
     const jsxGratitudeList = this.state.gratitudes.map(gratitude => {
       return (
         <div key={gratitude.id} size="4" className="gratfeed">
