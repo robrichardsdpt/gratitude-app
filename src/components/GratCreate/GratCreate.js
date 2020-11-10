@@ -9,6 +9,7 @@ class GratCreate extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      user: this.state.props.user,
       gratitude: {
         text: '',
         owner: this.props.user.id,

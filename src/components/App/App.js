@@ -54,7 +54,7 @@ class App extends Component {
           <AuthenticatedRoute user={user} path='/' render={() => (
             <GratCreate user={user} />
           )} />
-          <AuthenticatedRoute user={user} path='/' render={() => (
+          <AuthenticatedRoute user={user} path='/home' render={() => (
             <GratFeed user={user} />
           )} />
           <AuthenticatedRoute user={user} path='/gratlist' render={() => (
