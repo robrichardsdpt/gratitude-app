@@ -11,7 +11,9 @@ import InputGroup from 'react-bootstrap/InputGroup'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Dropdown from 'react-bootstrap/Dropdown'
 import GratEdit from '../GratEdit/GratEdit'
-import GratDelete from '../GratDelete/GratDelete'
+import Col from 'react-bootstrap/Col'
+import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
 
 class GratFeed extends React.Component {
   constructor (props) {
@@ -26,33 +28,82 @@ class GratFeed extends React.Component {
         owner: ''
       },
       showEdit: false,
-      showDelete: false
+      showDelete: false,
+      editGratitudeId: ''
     }
   }
 
-  showEditModal = () => {
+  showEditModal = (event) => {
     this.setState({
-      showEdit: true
+      showEdit: true,
+      editGratitudeId: event.target.name
+    })
+    axios({
+      url: `${apiUrl}/gratitudes/${event.target.name}`,
+      method: 'GET',
+      headers: {
+        Authorization: 'Token ' + `${this.state.user.token}`
+      }
+    })
+      .then(response => {
+        this.setState({
+          gratitude: response.data.gratitude
+        })
+      })
+  }
+
+  handleEditSubmit = (event) => {
+    event.preventDefault()
+    const { msgAlert } = this.props
+    const gratitude = this.state.gratitude
+    axios({
+      url: `${apiUrl}/gratitudes/${this.state.editGratitudeId}/`,
+      method: 'PATCH',
+      headers: {
+        Authorization: 'Token ' + `${this.state.user.token}`
+      },
+      data: {
+        gratitude: gratitude
+      }
+    })
+      .then((response) => {
+        this.setState({
+          showEdit: false
+        })
+        return (
+          axios({
+            url: `${apiUrl}/gratitudes/`,
+            method: 'GET',
+            headers: {
+              Authorization: 'Token ' + `${this.state.user.token}`
+            }
+          })
+        )
+      }
+      )
+      .then(response => {
+        this.setState({
+          gratitudes: response.data.gratitudes
+        })
+      })
+      .then(() => msgAlert({
+        heading: 'Gratitude Updated With Success',
+        message: messages.uploadGratitudeSuccess,
+        variant: 'success'
+      }))
+      .catch(error => {
+        msgAlert({
+          heading: 'Could not upload your gratitude changes, failed with error: ' + error.messages,
+          message: messages.uploadGratitudeFailure,
+          variant: 'danger'
+        })
+      })
+  }
+  hideEditModal = () => {
+    this.setState({
+      showEdit: false
     })
   }
-
-    hideEditModal = () => {
-      this.setState({
-        showEdit: false
-      })
-    }
-
-    showDeleteModal = () => {
-      this.setState({
-        showDelete: true
-      })
-    }
-
-      hideDeleteModal = () => {
-        this.setState({
-          showDelete: false
-        })
-      }
 
   // handles all user input
   handleChange = (event) => {
@@ -113,6 +164,49 @@ class GratFeed extends React.Component {
         })
       })
   }
+
+  handleDeleteSubmit = (event) => {
+    const { msgAlert } = this.props
+    const gratitudeId = event.target.name
+    console.log(this.state.user)
+    axios({
+      url: `${apiUrl}/gratitudes/${gratitudeId}/`,
+      method: 'DELETE',
+      headers: {
+        Authorization: 'Token ' + `${this.state.user.token}`
+      }
+    })
+      .then(() => msgAlert({
+        heading: 'Successfully Deleted Gratitude',
+        message: messages.deleteGratitudeSuccess,
+        variant: 'success'
+      }))
+      .then(() => {
+        return axios({
+          url: `${apiUrl}/gratitudes/`,
+          method: 'GET',
+          headers: {
+            Authorization: 'Token ' + `${this.state.user.token}`
+          }
+        })
+      }
+      )
+      .then(response => {
+        console.log(response.data.gratitudes)
+        this.setState({
+          gratitudes: response.data.gratitudes
+        })
+      })
+      .catch(error => {
+        msgAlert({
+          heading: 'Could not delete the Gratitude, failed with error: ' + error.messages,
+          message: messages.deleteGratitudeFailure,
+          variant: 'danger'
+        })
+      })
+      .catch(console.error)
+  }
+
   componentDidMount () {
     axios({
       url: `${apiUrl}/gratitudes/`,
@@ -160,23 +254,10 @@ class GratFeed extends React.Component {
                 id="input-group-dropdown-1"
                 title='...'
               >
-                <Dropdown.Item name='edit' onClick={this.showEditModal}>Edit</Dropdown.Item>
-                <Dropdown.Item name='delete' onClick={this.showDeleteModal}>Delete</Dropdown.Item>
+                <Dropdown.Item name={gratitude.id} eventKey={gratitude.id} onClick={this.showEditModal}>Edit</Dropdown.Item>
+                <Dropdown.Item name={gratitude.id} eventKey={gratitude.id} onClick={this.handleDeleteSubmit}>Delete</Dropdown.Item>
                 <Dropdown.Item name='cancel'>Cancel</Dropdown.Item>
               </DropdownButton></span>
-              <GratEdit
-                user={this.state.user}
-                show={this.state.showEdit}
-                gratitude={this.state.gratitude}
-                handleClose={this.hideEditModal}
-                handleEditSubmit={this.handleEditSubmit}
-                handleEditChanges={this.handEditChanges}/>
-              <GratDelete
-                user={this.state.user}
-                show={this.state.showDelete}
-                gratitude={this.state.gratitude}
-                handleClose={this.hideDeleteModal}
-                handleEditSubmit={this.handleDeleteSubmit}/>
             </div>
             <div className='grat-feed-create-date'>
               {moment(gratitude.created_at).format('LLLL')}
@@ -194,6 +275,15 @@ class GratFeed extends React.Component {
     })
     return (
       <div className='container'>
+        <GratEdit show={this.state.showEdit} handleClose={this.hideEditModal}>
+          <Col className='gratitude'>
+            <Form onSubmit={this.handleEditSubmit}>
+              <Form.Label className='textLabel'><h5>What are you grateful for?</h5></Form.Label>
+              <Form.Control name="text" id="text" onChange={this.handleChange} type="text" value={this.state.gratitude.text} />
+              <Button type='submit'>Update</Button>
+            </Form>
+          </Col>
+        </GratEdit>
         <GratCreate user={this.state.user} msgAlert={this.props.msgAlert} handleSubmit={this.handleSubmit} handleChange={this.handleChange}/>
         {jsxGratitudeList}
       </div>

@@ -1,9 +1,7 @@
 import React from 'react'
 import Button from 'react-bootstrap/Button'
-
-const GratEdit = ({ handleClose, show, children, handleEditSubmit, handleEditChanges }) => {
+const GratEdit = ({ handleClose, show, children }) => {
   const showHideClassName = show ? 'modal display-block' : 'modal display-none'
-
   return (
     <div className={showHideClassName}>
       <section className="modal-main">
