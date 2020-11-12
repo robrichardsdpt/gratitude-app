@@ -27,9 +27,11 @@ class GratCreate extends React.Component {
       <div className='top-of-create'>
         <div className='col'>
           <Form className='gratCreateform' onSubmit={this.props.handleSubmit} >
-            <Form.Label className='textLabel'><h5>What are you grateful for today?</h5></Form.Label>
-            <Form.Control name="text" id="text" onChange={this.props.handleChange} type="text" placeholder="Today I am grateful for..." />
-            <Button variant='primary' type="submit" className='create-submit'> Submit </Button>
+            <Form.Group controlId="textarea">
+              <Form.Label className='textLabel'><h5>What are you grateful for today?</h5></Form.Label>
+              <Form.Control name="text" onChange={this.props.handleChange} as="textarea" rows={3} placeholder="Today I am grateful for..." />
+              <Button variant='primary' type="submit" className='create-submit'> Submit </Button>
+            </Form.Group>
           </Form>
         </div>
       </div>

@@ -299,6 +299,7 @@ class GratFeed extends React.Component {
     // get the name of the input that the user typed in
     const gratKey = event.target.name
     // make a copy of the state
+    console.log(userInput)
     const gratCopy = Object.assign({}, this.state.gratitude) // to get the original state of the run and to copy it into another object to bypass inability to assign to a state
     // Object.assign({}, object-to-copy) allows you to combine two objects
     // updating the key in our state with what the user typed in
@@ -383,6 +384,7 @@ class GratFeed extends React.Component {
         this.setState({
           gratitudes: response.data.gratitudes
         })
+        console.log(response.data.gratitudes)
       })
       .catch(error => {
         msgAlert({
@@ -459,11 +461,12 @@ class GratFeed extends React.Component {
               </DropdownButton></span>
             </div>
             <div className='grat-feed-create-date'>
-              {moment(gratitude.created_at).format('LLLL')}
+              <p>{moment(gratitude.created_at).format('LLLL')}</p>
             </div>
           </div>
           <div className='grat-feed-text'>
-            {gratitude.text}<br/>
+            {gratitude.text}
+            <br/>
           </div>
           <div className="row">
             <div className="col-10 heart" >{gratitude.likes.length}<Button variant="primary" className='heartbtn' key={gratitude.id} id={gratitude.id} onClick={this.onLike}>Like</Button></div>
