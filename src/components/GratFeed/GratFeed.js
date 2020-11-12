@@ -45,7 +45,8 @@ class GratFeed extends React.Component {
         text: '',
         owner: this.props.user.id,
         gratitude: 0
-      }
+      },
+      comments: []
     }
   }
 
@@ -74,6 +75,81 @@ class GratFeed extends React.Component {
     this.setState({
       showComment: false
     })
+  }
+
+  handleCommentChange = (event) => {
+    // get the value that the user typed in
+    const userInput = event.target.value
+    // get the name of the input that the user typed in
+    const commentKey = event.target.name
+    // make a copy of the state
+    console.log(userInput)
+    const commentCopy = Object.assign({}, this.state.comment) // to get the original state of the run and to copy it into another object to bypass inability to assign to a state
+    // Object.assign({}, object-to-copy) allows you to combine two objects
+    // updating the key in our state with what the user typed in
+    commentCopy[commentKey] = userInput
+    console.log(commentCopy)
+    commentCopy['gratitude'] = this.state.gratitudeIdForComment
+    // updating the state with our new copy
+    this.setState({ comment: commentCopy
+    })
+  }
+
+  handleCommentSubmit = (event) => {
+    event.preventDefault()
+    const { msgAlert } = this.props
+    const comment = this.state.comment
+    axios({
+      url: `${apiUrl}/comments/`,
+      method: 'POST',
+      headers: {
+        Authorization: 'Token ' + `${this.state.user.token}`
+      },
+      data: {
+        comment: comment
+      }
+    })
+      .then((response) => {
+        this.setState({
+          createdCommentId: response.data.comment.id
+        })
+        return axios({
+          url: `${apiUrl}/gratitudes/`,
+          method: 'GET',
+          headers: {
+            Authorization: 'Token ' + `${this.state.user.token}`
+          }
+        })
+          .then(response => {
+            this.setState({
+              gratitudes: response.data.gratitudes
+            })
+            return axios({
+              url: `${apiUrl}/comments/`,
+              method: 'GET',
+              headers: {
+                Authorization: 'Token ' + `${this.state.user.token}`
+              }
+            })
+              .then(response => {
+                this.setState({
+                  comments: response.data.comments
+                })
+              })
+          })
+      })
+      .then(() => msgAlert({
+        heading: 'New Comment Added With Success',
+        message: messages.uploadGratSuccess,
+        variant: 'success'
+      }))
+      .catch(error => {
+        msgAlert({
+          heading: 'Could not upload your comment, failed with error: ' + error.messages,
+          message: messages.uploadGratFailure,
+          variant: 'danger'
+        })
+      })
   }
 
   gratitudeBasedOnId = (id, gratitudes) => {
@@ -465,6 +541,18 @@ class GratFeed extends React.Component {
                 this.setState({
                   gratitude_likes: response.data.gratitude_likes
                 })
+                return axios({
+                  url: `${apiUrl}/comments/`,
+                  method: 'GET',
+                  headers: {
+                    Authorization: 'Token ' + `${this.state.user.token}`
+                  }
+                })
+                  .then(response => {
+                    this.setState({
+                      comments: response.data.comments
+                    })
+                  })
               })
           })
       })
