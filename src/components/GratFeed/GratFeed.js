@@ -133,7 +133,8 @@ class GratFeed extends React.Component {
             })
               .then(response => {
                 this.setState({
-                  comments: response.data.comments
+                  comments: response.data.comments,
+                  showComment: false
                 })
               })
           })
@@ -560,6 +561,46 @@ class GratFeed extends React.Component {
   }
 
   render () {
+    const commentToJsx = (array) => {
+      const newArray = []
+      array.map(comment => {
+        let commentOwner = ''
+        console.log('hi')
+        for (let i = 0; i < this.state.users.length; i++) {
+          if (comment.owner === this.state.users[i].id) {
+            commentOwner = this.state.users[i].email
+          }
+          console.log(commentOwner)
+        }
+        newArray.push(
+          <div key={comment.id} size="4" className="commentfeed">
+            <div className='comment-container'>
+              <div className='comment-owner'>
+                <h5><Link to={`/gratlist/${comment.owner}`}>{commentOwner}</Link></h5>
+                <span className= 'comment-date'>{moment(comment.created_at).format('LLLL')}</span><br/>
+                {comment.text}
+                <div className='commentDropDown'>
+                  <span className='editbtn'><DropdownButton
+                    as={InputGroup.Prepend}
+                    variant="primary"
+                    id="input-group-dropdown-1"
+                    title='...'
+                    size='sm'
+                  >
+                    <Dropdown.Item name={comment.id} eventKey={comment.id} onClick={console.log('edit')}>Edit</Dropdown.Item>
+                    <Dropdown.Item name={comment.id} eventKey={comment.id} onClick={console.log('delete')}>Delete</Dropdown.Item>
+                    <Dropdown.Item name='cancel'>Cancel</Dropdown.Item>
+                  </DropdownButton></span>
+                </div>
+              </div>
+              <br/>
+            </div>
+            <div className="col-9 heart" ><Button variant="primary" size='sm' className='heartbtn' name={comment.id} onClick={console.log('like')}>Like</Button>{comment.likes.length}</div>
+          </div>
+        )
+      })
+      return newArray
+    }
     const jsxGratitudeList = this.state.gratitudes.map(gratitude => {
       let gratOwner = ''
       for (let i = 0; i < this.state.users.length; i++) {
@@ -567,6 +608,16 @@ class GratFeed extends React.Component {
           gratOwner = this.state.users[i].email
         }
       }
+      const commentArray = []
+      for (let j = 0; j < this.state.comments.length; j++) {
+        if (this.state.comments[j].gratitude === gratitude.id) {
+          commentArray.push(this.state.comments[j])
+        }
+      }
+      console.log(commentArray)
+      const commentJsx = []
+      commentJsx.push(commentToJsx(commentArray))
+      console.log(commentJsx)
       return (
         <div key={gratitude.id} size="4" className="gratfeed">
           <div className='card-header'>
@@ -588,13 +639,16 @@ class GratFeed extends React.Component {
             </div>
           </div>
           <div className='grat-feed-text'>
-            {gratitude.text}
+            <h5>
+              {gratitude.text}
+            </h5>
             <br/>
           </div>
           <div className="row">
             <div className="col-9 heart" ><Button variant="primary" className='heartbtn' key={gratitude.id} id={gratitude.id} onClick={this.onLike}>Like</Button>{gratitude.likes.length}</div>
             <div className='col-3 comment-bubble'> <Button className='commentbtn' onClick={this.showCommentModal} name={gratitude.id}>Comment</Button>{gratitude.comments.length}</div>
           </div>
+          {commentJsx}
         </div>
       )
     })

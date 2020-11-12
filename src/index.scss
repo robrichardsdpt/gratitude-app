@@ -69,6 +69,24 @@ a:hover {
 .commentbtn {
   margin-right: 10px;
 }
+.grat-feed-comment-text {
+  padding-left: 100px;
+  padding-right: 100px;
+  display: flex;
+  flex-direction: row;
+  background-color: lightgray;
+}
+
+.comment-owner {
+  margin-top: 10px;
+  padding-top: 5px;
+  padding-left: 100px;
+  padding-right: 100px;
+}
+.comment-date {
+  font-style: italic;
+  font-size: 0.8rem;
+}
 
 .modal {
   position: fixed;
@@ -110,6 +128,7 @@ a:hover {
   padding-right: 20px;
   padding-bottom: 20px;
 }
+
 .commentSubmitButton {
   margin: 10px;
 }
@@ -122,6 +141,12 @@ a:hover {
   display: none;
 }
 
+.comment-container {
+  background: lightsteelblue;
+  border-radius: 50px;
+  margin-left: 35px;
+  margin-right: 35px;
+}
 .comment-display-block {
   display: block;
 }
