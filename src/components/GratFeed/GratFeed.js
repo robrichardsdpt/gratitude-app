@@ -592,8 +592,8 @@ class GratFeed extends React.Component {
             <br/>
           </div>
           <div className="row">
-            <div className="col-9 heart" >{gratitude.likes.length}<Button variant="primary" className='heartbtn' key={gratitude.id} id={gratitude.id} onClick={this.onLike}>Like</Button></div>
-            <div className='col-3 comment-bubble'> <Button onClick={this.showCommentModal} name={gratitude.id}>Comment</Button></div>
+            <div className="col-9 heart" ><Button variant="primary" className='heartbtn' key={gratitude.id} id={gratitude.id} onClick={this.onLike}>Like</Button>{gratitude.likes.length}</div>
+            <div className='col-3 comment-bubble'> <Button className='commentbtn' onClick={this.showCommentModal} name={gratitude.id}>Comment</Button>{gratitude.comments.length}</div>
           </div>
         </div>
       )
