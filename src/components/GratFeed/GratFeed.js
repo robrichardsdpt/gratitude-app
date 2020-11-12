@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import GratCreate from '../GratCreate/GratCreate'
 import messages from '../AutoDismissAlert/messages'
 import moment from 'moment'
-import { BiCommentAdd } from 'react-icons/bi'
+// import { BiCommentAdd } from 'react-icons/bi'
 // import { AiOutlineHeart } from 'react-icons/ai'
 import InputGroup from 'react-bootstrap/InputGroup'
 import DropdownButton from 'react-bootstrap/DropdownButton'
@@ -14,6 +14,7 @@ import GratEdit from '../GratEdit/GratEdit'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
+import GratComment from '../GratComment/GratComment'
 
 class GratFeed extends React.Component {
   constructor (props) {
@@ -31,14 +32,48 @@ class GratFeed extends React.Component {
       gratitude_likes: [],
       showEdit: false,
       showDelete: false,
+      showComment: false,
       editGratitudeId: '',
+      gratitudeIdForComment: null,
       createdGratitudelikeId: '',
       gratitude_like: {
         like: 0,
         owner: this.props.user.id,
         gratitude: 0
+      },
+      comment: {
+        text: '',
+        owner: this.props.user.id,
+        gratitude: 0
       }
     }
+  }
+
+  // a comment requires text, owner, and created_at
+  showCommentModal = (event) => {
+    this.setState({
+      showComment: true,
+      gratitudeIdForComment: event.target.name
+    })
+    console.log(this.state.showComment)
+    axios({
+      url: `${apiUrl}/gratitudes/${event.target.name}`,
+      method: 'GET',
+      headers: {
+        Authorization: 'Token ' + `${this.state.user.token}`
+      }
+    })
+      .then(response => {
+        this.setState({
+          gratitude: response.data.gratitude
+        })
+      })
+  }
+
+  hideCommentModal = () => {
+    this.setState({
+      showComment: false
+    })
   }
 
   gratitudeBasedOnId = (id, gratitudes) => {
@@ -469,8 +504,8 @@ class GratFeed extends React.Component {
             <br/>
           </div>
           <div className="row">
-            <div className="col-10 heart" >{gratitude.likes.length}<Button variant="primary" className='heartbtn' key={gratitude.id} id={gratitude.id} onClick={this.onLike}>Like</Button></div>
-            <div className='col-2 comment-bubble'><BiCommentAdd/></div>
+            <div className="col-9 heart" >{gratitude.likes.length}<Button variant="primary" className='heartbtn' key={gratitude.id} id={gratitude.id} onClick={this.onLike}>Like</Button></div>
+            <div className='col-3 comment-bubble'> <Button onClick={this.showCommentModal} name={gratitude.id}>Comment</Button></div>
           </div>
         </div>
       )
@@ -486,6 +521,18 @@ class GratFeed extends React.Component {
             </Form>
           </Col>
         </GratEdit>
+        <GratComment show={this.state.showComment} handleClose={this.hideCommentModal}>
+          <Col className='gratitude'>
+            <Form onSubmit={this.handleCommentSubmit}>
+              <Form.Label className='textLabel'><h5>What are you grateful for?</h5></Form.Label>
+              <div className='gratitudeTextForComment'>
+                {this.state.gratitude.text}
+              </div>
+              <Form.Control name="text" id="text" onChange={this.handleCommentChange} as="textarea" rows={3} placeholder='Add a comment...' />
+              <Button className='commentSubmitButton' type='submit'>Submit</Button>
+            </Form>
+          </Col>
+        </GratComment>
         <GratCreate user={this.state.user} msgAlert={this.props.msgAlert} handleSubmit={this.handleSubmit} handleChange={this.handleChange}/>
         {jsxGratitudeList}
       </div>
