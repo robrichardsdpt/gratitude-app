@@ -57,9 +57,15 @@ a:hover {
 .heart {
   display: flex;
   justify-content: flex-end;
-  padding-top: 20px;
+  padding-top: 13px;
   font-size: 20px;
   margin-bottom: 2px;
+}
+.heart:hover {
+  color: red;
+}
+.heartbtn {
+  margin-left: 10px;
 }
 
 .modal {
@@ -68,7 +74,7 @@ a:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(200, 200, 200, 0.3);
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .modal-main {

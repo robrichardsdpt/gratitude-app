@@ -6,7 +6,7 @@ import GratCreate from '../GratCreate/GratCreate'
 import messages from '../AutoDismissAlert/messages'
 import moment from 'moment'
 import { BiCommentAdd } from 'react-icons/bi'
-import { AiOutlineHeart } from 'react-icons/ai'
+// import { AiOutlineHeart } from 'react-icons/ai'
 import InputGroup from 'react-bootstrap/InputGroup'
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Dropdown from 'react-bootstrap/Dropdown'
@@ -25,11 +25,197 @@ class GratFeed extends React.Component {
       gratitude: {
         text: '',
         created_at: '',
-        owner: ''
+        owner: '',
+        gratitude_likes: 0
       },
+      gratitude_likes: [],
       showEdit: false,
       showDelete: false,
-      editGratitudeId: ''
+      editGratitudeId: '',
+      createdGratitudelikeId: '',
+      gratitude_like: {
+        like: 0,
+        owner: this.props.user.id,
+        gratitude: 0
+      }
+    }
+  }
+
+  gratitudeBasedOnId = (id, gratitudes) => {
+    for (let i = 0; i < gratitudes.length; i++) {
+      console.log(id, gratitudes[i].id)
+      const intId = parseInt(id)
+      const gratId = parseInt(gratitudes[i].id)
+      if (gratId === intId) {
+        this.setState({
+          gratitude_like: {
+            gratitude: gratId
+          }
+        })
+        return gratitudes[i]
+      }
+    }
+  }
+
+  findGratitudeLike = (gratitude, owner) => {
+    let gratitudeLike
+    for (let i = 0; i < this.state.gratitude_likes.length; i++) {
+      if (this.state.gratitude_likes[i].owner === parseInt(owner) && this.state.gratitude_likes[i].gratitude === parseInt(gratitude)) {
+        gratitudeLike = this.state.gratitude_likes[i]
+        return gratitudeLike
+      }
+    }
+    return false
+  }
+
+  onLike = (event) => {
+    console.log(this.state.gratitudes)
+    const gratClick = event.target.id
+    let grat = {}
+    grat = this.gratitudeBasedOnId(gratClick, this.state.gratitudes)
+    const gratitudeLikesArray = grat.likes
+    const user = this.state.user.id
+    let gratLike = {}
+    gratLike = this.findGratitudeLike(gratClick, this.state.user.id)
+    // gratLike tells you that the owner has a like for that gratitude already and sends it to be deleted
+    if (gratitudeLikesArray.length !== 0 && gratLike) {
+      this.setState({
+        gratitude_like:
+        { like: 0,
+          owner: user,
+          gratitude: grat }
+      })
+      return axios({
+        url: `${apiUrl}/gratitude_likes/${gratLike.id}`,
+        method: 'DELETE',
+        headers: {
+          Authorization: 'Token ' + `${this.state.user.token}`
+        }
+      })
+        .then((response) => {
+          return axios({
+            url: `${apiUrl}/gratitudes/`,
+            method: 'GET',
+            headers: {
+              Authorization: 'Token ' + `${this.state.user.token}`
+            }
+          })
+        })
+        .then(response => {
+          this.setState({
+            gratitudes: response.data.gratitudes
+          })
+          return axios({
+            url: `${apiUrl}/gratitude_likes/`,
+            method: 'GET',
+            headers: {
+              Authorization: 'Token ' + `${this.state.user.token}`
+            }
+          })
+        })
+        .then(response => {
+          this.setState({
+            gratitude_likes: response.data.gratitude_likes
+          })
+        })
+    } else if (gratitudeLikesArray.length !== 0 && !gratLike) {
+      const gLCopy = Object.assign({}, this.state.gratitude_like) // to get the original state of the run and to copy it into another object to bypass inability to assign to a state
+      // Object.assign({}, object-to-copy) allows you to combine two objects
+      // updating the key in our state with what the user typed in
+      gLCopy['owner'] = this.state.user.id
+      gLCopy['gratitude'] = gratClick
+      this.setState({
+        gratitude_like: gLCopy
+      })
+      console.log(gLCopy)
+      return axios({
+        url: `${apiUrl}/gratitude_likes/`,
+        method: 'POST',
+        headers: {
+          Authorization: 'Token ' + `${this.state.user.token}`
+        },
+        data: {
+          gratitude_like: gLCopy
+        }
+      })
+        .then((response) => {
+          this.setState({
+            createdGratitudelikeId: response.data.gratitude_like.id
+          })
+          return axios({
+            url: `${apiUrl}/gratitudes/`,
+            method: 'GET',
+            headers: {
+              Authorization: 'Token ' + `${this.state.user.token}`
+            }
+          })
+            .then(response => {
+              this.setState({
+                gratitudes: response.data.gratitudes
+              })
+              return axios({
+                url: `${apiUrl}/gratitude_likes/`,
+                method: 'GET',
+                headers: {
+                  Authorization: 'Token ' + `${this.state.user.token}`
+                }
+              })
+                .then(response => {
+                  this.setState({
+                    gratitude_likes: response.data.gratitude_likes
+                  })
+                })
+            })
+        })
+    } else if (gratitudeLikesArray.length === 0 && !gratLike) {
+      const gLCopy = Object.assign({}, this.state.gratitude_like) // to get the original state of the run and to copy it into another object to bypass inability to assign to a state
+      // Object.assign({}, object-to-copy) allows you to combine two objects
+      // updating the key in our state with what the user typed in
+      gLCopy['owner'] = this.state.user.id
+      gLCopy['gratitude'] = gratClick
+      this.setState({
+        gratitude_like: gLCopy
+      })
+      console.log(gLCopy)
+      return axios({
+        url: `${apiUrl}/gratitude_likes/`,
+        method: 'POST',
+        headers: {
+          Authorization: 'Token ' + `${this.state.user.token}`
+        },
+        data: {
+          gratitude_like: gLCopy
+        }
+      })
+        .then((response) => {
+          this.setState({
+            createdGratitudelikeId: response.data.gratitude_like.id
+          })
+          return axios({
+            url: `${apiUrl}/gratitudes/`,
+            method: 'GET',
+            headers: {
+              Authorization: 'Token ' + `${this.state.user.token}`
+            }
+          })
+            .then(response => {
+              this.setState({
+                gratitudes: response.data.gratitudes
+              })
+              return axios({
+                url: `${apiUrl}/gratitude_likes/`,
+                method: 'GET',
+                headers: {
+                  Authorization: 'Token ' + `${this.state.user.token}`
+                }
+              })
+                .then(response => {
+                  this.setState({
+                    gratitude_likes: response.data.gratitude_likes
+                  })
+                })
+            })
+        })
     }
   }
 
@@ -99,6 +285,7 @@ class GratFeed extends React.Component {
         })
       })
   }
+
   hideEditModal = () => {
     this.setState({
       showEdit: false
@@ -230,6 +417,18 @@ class GratFeed extends React.Component {
             this.setState({
               users: response.data.users
             })
+            return axios({
+              url: `${apiUrl}/gratitude_likes/`,
+              method: 'GET',
+              headers: {
+                Authorization: 'Token ' + `${this.state.user.token}`
+              }
+            })
+              .then(response => {
+                this.setState({
+                  gratitude_likes: response.data.gratitude_likes
+                })
+              })
           })
       })
       .catch(console.error)
@@ -267,7 +466,7 @@ class GratFeed extends React.Component {
             {gratitude.text}<br/>
           </div>
           <div className="row">
-            <div className="col-10 heart"><AiOutlineHeart/></div>
+            <div className="col-10 heart" >{gratitude.likes.length}<Button variant="primary" className='heartbtn' key={gratitude.id} id={gratitude.id} onClick={this.onLike}>Like</Button></div>
             <div className='col-2 comment-bubble'><BiCommentAdd/></div>
           </div>
         </div>
