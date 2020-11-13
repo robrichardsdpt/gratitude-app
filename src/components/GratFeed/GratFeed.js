@@ -15,6 +15,7 @@ import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import GratComment from '../GratComment/GratComment'
+import CommentEdit from '../EditComment/EditComment'
 
 class GratFeed extends React.Component {
   constructor (props) {
@@ -46,7 +47,9 @@ class GratFeed extends React.Component {
         owner: this.props.user.id,
         gratitude: 0
       },
-      comments: []
+      comments: [],
+      showCommentEdit: false,
+      editCommentId: ''
     }
   }
 
@@ -113,6 +116,104 @@ class GratFeed extends React.Component {
         this.setState({
           createdCommentId: response.data.comment.id
         })
+        return axios({
+          url: `${apiUrl}/gratitudes/`,
+          method: 'GET',
+          headers: {
+            Authorization: 'Token ' + `${this.state.user.token}`
+          }
+        })
+          .then(response => {
+            this.setState({
+              gratitudes: response.data.gratitudes
+            })
+            return axios({
+              url: `${apiUrl}/comments/`,
+              method: 'GET',
+              headers: {
+                Authorization: 'Token ' + `${this.state.user.token}`
+              }
+            })
+              .then(response => {
+                this.setState({
+                  comments: response.data.comments,
+                  showComment: false
+                })
+              })
+          })
+      })
+      .then(() => msgAlert({
+        heading: 'New Comment Added With Success',
+        message: messages.uploadGratSuccess,
+        variant: 'success'
+      }))
+      .catch(error => {
+        msgAlert({
+          heading: 'Could not upload your comment, failed with error: ' + error.messages,
+          message: messages.uploadGratFailure,
+          variant: 'danger'
+        })
+      })
+  }
+
+  showEditCommentModal = (event) => {
+    this.setState({
+      showCommentEdit: true,
+      editCommentId: event.target.name
+    })
+    axios({
+      url: `${apiUrl}/comments/${event.target.name}/`,
+      method: 'GET',
+      headers: {
+        Authorization: 'Token ' + `${this.state.user.token}`
+      }
+    })
+      .then(response => {
+        this.setState({
+          comment: response.data.comment
+        })
+        console.log(response.data.comment)
+      })
+  }
+
+  hideEditCommentModal = () => {
+    this.setState({
+      showCommentEdit: false
+    })
+  }
+
+  handleCommentEditChange = (event) => {
+    // get the value that the user typed in
+    const userInput = event.target.value
+    // get the name of the input that the user typed in
+    const commentKey = event.target.name
+    // make a copy of the state
+    console.log(userInput)
+    const commentCopy = Object.assign({}, this.state.comment) // to get the original state of the run and to copy it into another object to bypass inability to assign to a state
+    // Object.assign({}, object-to-copy) allows you to combine two objects
+    // updating the key in our state with what the user typed in
+    commentCopy[commentKey] = userInput
+    // updating the state with our new copy
+    this.setState({ comment: commentCopy
+    })
+  }
+
+  handleCommentEditSubmit = (event) => {
+    event.preventDefault()
+    const { msgAlert } = this.props
+    const comment = this.state.comment
+    console.log(comment)
+    axios({
+      url: `${apiUrl}/comments/${this.state.editCommentId}/`,
+      method: 'PATCH',
+      headers: {
+        Authorization: 'Token ' + `${this.state.user.token}`
+      },
+      data: {
+        comment: comment
+      }
+    })
+      .then((response) => {
         return axios({
           url: `${apiUrl}/gratitudes/`,
           method: 'GET',
@@ -587,7 +688,7 @@ class GratFeed extends React.Component {
                     title='...'
                     size='sm'
                   >
-                    <Dropdown.Item name={comment.id} eventKey={comment.id} onClick={console.log('edit')}>Edit</Dropdown.Item>
+                    <Dropdown.Item name={comment.id} eventKey={comment.id} onClick={this.showEditCommentModal}>Edit</Dropdown.Item>
                     <Dropdown.Item name={comment.id} eventKey={comment.id} onClick={console.log('delete')}>Delete</Dropdown.Item>
                     <Dropdown.Item name='cancel'>Cancel</Dropdown.Item>
                   </DropdownButton></span>
@@ -666,15 +767,21 @@ class GratFeed extends React.Component {
         <GratComment show={this.state.showComment} handleClose={this.hideCommentModal}>
           <Col className='gratitude'>
             <Form onSubmit={this.handleCommentSubmit}>
-              <Form.Label className='textLabel'><h5>What are you grateful for?</h5></Form.Label>
-              <div className='gratitudeTextForComment'>
-                {this.state.gratitude.text}
-              </div>
+              <Form.Label className='textLabel'><h5>Leave a comment...</h5></Form.Label>
               <Form.Control name="text" id="text" onChange={this.handleCommentChange} as="textarea" rows={3} placeholder='Add a comment...' />
               <Button className='commentSubmitButton' type='submit'>Submit</Button>
             </Form>
           </Col>
         </GratComment>
+        <CommentEdit show={this.state.showCommentEdit} handleClose={this.hideEditCommentModal}>
+          <Col className='gratitude'>
+            <Form onSubmit={this.handleCommentEditSubmit}>
+              <Form.Label className='textLabel'><h5>Update your comment...</h5></Form.Label>
+              <Form.Control name="text" id="text" onChange={this.handleCommentEditChange} type="text" value={this.state.comment.text} />
+              <Button type='submit'>Update</Button>
+            </Form>
+          </Col>
+        </CommentEdit>
         <GratCreate user={this.state.user} msgAlert={this.props.msgAlert} handleSubmit={this.handleSubmit} handleChange={this.handleChange}/>
         {jsxGratitudeList}
       </div>
