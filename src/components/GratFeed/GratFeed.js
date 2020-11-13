@@ -45,6 +45,7 @@ class GratFeed extends React.Component {
       comment: {
         text: '',
         owner: this.props.user.id,
+        created_at: '',
         gratitude: 0
       },
       comments: [],
@@ -223,6 +224,7 @@ class GratFeed extends React.Component {
         })
           .then(response => {
             this.setState({
+              showCommentEdit: false,
               gratitudes: response.data.gratitudes
             })
             return axios({
