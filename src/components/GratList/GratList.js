@@ -66,7 +66,7 @@ class GratList extends React.Component {
     })
     return (
       <div className='container'>
-        <h4>{userEmail}</h4>
+        <h3>{userEmail}</h3>
         {`The user has been grateful ${usersGratitude.length} times!`}
         {jsxGratitudeList}
         <Link to='/grat-feed'><Button>Return to GratFeed</Button></Link>
