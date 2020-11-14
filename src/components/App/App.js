@@ -63,9 +63,18 @@ class App extends Component {
               msgAlert={this.msgAlert}
               user={this.state.user} />
           )} />
-          <AuthenticatedRoute user={user} path='/gratlist' render={() => (
-            <GratList user={user} />
-          )} />
+          <AuthenticatedRoute user={user} path='/gratlist/:id' render={(userParams) => {
+            const { match, history } = userParams
+            const currentId = match.params.id
+            return (
+              <GratList
+                id={currentId}
+                msgAlert={this.msgAlert}
+                user={this.state.user}
+                history={history} />
+            )
+          }
+          } />
           <AuthenticatedRoute user={user} path='/sign-out' render={() => (
             <SignOut msgAlert={this.msgAlert} clearUser={this.clearUser} user={user} />
           )} />
