@@ -56,9 +56,53 @@ class GratFeed extends React.Component {
       },
       comments: [],
       showCommentEdit: false,
+      showCommentDelete: false,
       editCommentId: '',
       createdCommentlikeId: ''
     }
+  }
+
+  handleCommentDelete = (event) => {
+    const { msgAlert } = this.props
+    const commentId = event.target.name
+    console.log(this.state.user)
+    axios({
+      url: `${apiUrl}/comments/${commentId}/`,
+      method: 'DELETE',
+      headers: {
+        Authorization: 'Token ' + `${this.state.user.token}`
+      }
+    })
+      .then(() => msgAlert({
+        heading: 'Successfully Deleted Comment',
+        message: messages.deleteCommentSuccess,
+        variant: 'success'
+      }))
+      .then(() => {
+        return axios({
+          url: `${apiUrl}/comments/`,
+          method: 'GET',
+          headers: {
+            Authorization: 'Token ' + `${this.state.user.token}`
+          }
+        })
+      }
+      )
+      .then(response => {
+        console.log(response.data.comments)
+        this.setState({
+          comments: response.data.comments
+        })
+        console.log(response.data.comments)
+      })
+      .catch(error => {
+        msgAlert({
+          heading: 'Could not delete the Comment, failed with error: ' + error.messages,
+          message: messages.deleteCommentFailure,
+          variant: 'danger'
+        })
+      })
+      .catch(console.error)
   }
 
   commentBasedOnId = (id, comments) => {
@@ -876,7 +920,7 @@ class GratFeed extends React.Component {
                     size='sm'
                   >
                     <Dropdown.Item name={comment.id} eventKey={comment.id} onClick={this.showEditCommentModal}>Edit</Dropdown.Item>
-                    <Dropdown.Item name={comment.id} eventKey={comment.id} onClick={console.log('delete')}>Delete</Dropdown.Item>
+                    <Dropdown.Item name={comment.id} eventKey={comment.id} onClick={this.handleCommentDelete}>Delete</Dropdown.Item>
                     <Dropdown.Item name='cancel'>Cancel</Dropdown.Item>
                   </DropdownButton></span>
                 </div>
