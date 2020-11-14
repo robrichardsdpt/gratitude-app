@@ -89,11 +89,22 @@ class GratFeed extends React.Component {
       }
       )
       .then(response => {
-        console.log(response.data.comments)
         this.setState({
           comments: response.data.comments
         })
-        console.log(response.data.comments)
+        return axios({
+          url: `${apiUrl}/gratitudes/`,
+          method: 'GET',
+          headers: {
+            Authorization: 'Token ' + `${this.state.user.token}`
+          }
+        })
+      }
+      )
+      .then(response => {
+        this.setState({
+          gratitudes: response.data.gratitudes
+        })
       })
       .catch(error => {
         msgAlert({
