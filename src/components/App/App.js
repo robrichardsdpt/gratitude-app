@@ -11,6 +11,7 @@ import ChangePassword from '../ChangePassword/ChangePassword'
 import GratFeed from '../GratFeed/GratFeed'
 import GratList from '../GratList/GratList'
 import GratCreate from '../GratCreate/GratCreate'
+import Landing from '../Landing/Landing.js'
 
 class App extends Component {
   constructor () {
@@ -45,6 +46,9 @@ class App extends Component {
           />
         ))}
         <main className="container">
+          <Route exact path='/' render={() => (
+            <Landing msgAlert={this.msgAlert} setUser={this.setUser} />
+          )} />
           <Route path='/sign-up' render={() => (
             <SignUp msgAlert={this.msgAlert} setUser={this.setUser} />
           )} />

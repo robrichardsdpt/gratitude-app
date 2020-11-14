@@ -189,3 +189,10 @@ a:hover {
 .comment-delete-display-none {
   display: none;
 }
+
+.landing-image {
+  display: flex;
+  height: 95vh;
+  width: 100vw;
+  object-fit: cover;
+}
