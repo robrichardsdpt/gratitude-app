@@ -58,7 +58,7 @@ class GratList extends React.Component {
       return (
         <div key={gratitude.id} size="4" className="gratfeed">
           <div className='card-header'>
-            <Link to={`/gratlist/${gratitude.id}`}><h5 className= 'grat-date'>{moment(gratitude.created_at).format('LLLL')}</h5></Link>
+            <h5 className= 'grat-date'>{moment(gratitude.created_at).format('LLLL')}</h5>
             {gratitude.text}
           </div>
         </div>
