@@ -991,7 +991,7 @@ class GratFeed extends React.Component {
             <Form onSubmit={this.handleEditSubmit}>
               <Form.Label className='textLabel'><h5>What are you grateful for?</h5></Form.Label>
               <Form.Control name="text" id="text" onChange={this.handleChange} type="text" value={this.state.gratitude.text} />
-              <Button type='submit'>Update</Button>
+              <Button className='commentSubmitButton' type='submit'>Update</Button>
             </Form>
           </Col>
         </GratEdit>
@@ -1009,7 +1009,7 @@ class GratFeed extends React.Component {
             <Form onSubmit={this.handleCommentEditSubmit}>
               <Form.Label className='textLabel'><h5>Update your comment...</h5></Form.Label>
               <Form.Control name="text" id="text" onChange={this.handleCommentEditChange} type="text" value={this.state.comment.text} />
-              <Button type='submit'>Update</Button>
+              <Button className='commentSubmitButton' type='submit'>Update</Button>
             </Form>
           </Col>
         </CommentEdit>
