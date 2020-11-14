@@ -2,6 +2,7 @@ import React from 'react'
 import axios from 'axios'
 import apiUrl from '../../apiConfig'
 import { Link } from 'react-router-dom'
+import Button from 'react-bootstrap/Button'
 import moment from 'moment'
 
 class GratList extends React.Component {
@@ -65,8 +66,9 @@ class GratList extends React.Component {
     })
     return (
       <div className='container'>
-        {userEmail}
+        <h4>{userEmail}</h4>
         {jsxGratitudeList}
+        <Link to='/grat-feed'><Button>Return to GratFeed</Button></Link>
       </div>
     )
   }
