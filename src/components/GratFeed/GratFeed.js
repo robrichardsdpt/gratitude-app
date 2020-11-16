@@ -65,7 +65,6 @@ class GratFeed extends React.Component {
   handleCommentDelete = (event) => {
     const { msgAlert } = this.props
     const commentId = event.target.name
-    console.log(this.state.user)
     axios({
       url: `${apiUrl}/comments/${commentId}/`,
       method: 'DELETE',
@@ -118,7 +117,6 @@ class GratFeed extends React.Component {
 
   commentBasedOnId = (id, comments) => {
     for (let i = 0; i < comments.length; i++) {
-      console.log(id, comments[i].id)
       const intId = parseInt(id)
       const commentId = parseInt(comments[i].id)
       if (commentId === intId) {
@@ -144,7 +142,6 @@ class GratFeed extends React.Component {
   }
 
   onCommentLike = (event) => {
-    console.log(this.state.comments)
     const commentClick = event.target.name
     let comment = {}
     comment = this.commentBasedOnId(commentClick, this.state.comments)
@@ -202,7 +199,6 @@ class GratFeed extends React.Component {
       this.setState({
         comment_like: cLCopy
       })
-      console.log(cLCopy)
       return axios({
         url: `${apiUrl}/comment_likes/`,
         method: 'POST',
@@ -251,7 +247,6 @@ class GratFeed extends React.Component {
       this.setState({
         comment_like: cLCopy
       })
-      console.log(cLCopy)
       return axios({
         url: `${apiUrl}/comment_likes/`,
         method: 'POST',
@@ -300,7 +295,6 @@ class GratFeed extends React.Component {
       showComment: true,
       gratitudeIdForComment: event.target.name
     })
-    console.log(this.state.showComment)
     axios({
       url: `${apiUrl}/gratitudes/${event.target.name}`,
       method: 'GET',
@@ -327,12 +321,10 @@ class GratFeed extends React.Component {
     // get the name of the input that the user typed in
     const commentKey = event.target.name
     // make a copy of the state
-    console.log(userInput)
     const commentCopy = Object.assign({}, this.state.comment) // to get the original state of the run and to copy it into another object to bypass inability to assign to a state
     // Object.assign({}, object-to-copy) allows you to combine two objects
     // updating the key in our state with what the user typed in
     commentCopy[commentKey] = userInput
-    console.log(commentCopy)
     commentCopy['gratitude'] = this.state.gratitudeIdForComment
     // updating the state with our new copy
     this.setState({ comment: commentCopy
@@ -413,7 +405,6 @@ class GratFeed extends React.Component {
         this.setState({
           comment: response.data.comment
         })
-        console.log(response.data.comment)
       })
   }
 
@@ -429,7 +420,6 @@ class GratFeed extends React.Component {
     // get the name of the input that the user typed in
     const commentKey = event.target.name
     // make a copy of the state
-    console.log(userInput)
     const commentCopy = Object.assign({}, this.state.comment) // to get the original state of the run and to copy it into another object to bypass inability to assign to a state
     // Object.assign({}, object-to-copy) allows you to combine two objects
     // updating the key in our state with what the user typed in
@@ -443,7 +433,6 @@ class GratFeed extends React.Component {
     event.preventDefault()
     const { msgAlert } = this.props
     const comment = this.state.comment
-    console.log(comment)
     axios({
       url: `${apiUrl}/comments/${this.state.editCommentId}/`,
       method: 'PATCH',
@@ -498,7 +487,6 @@ class GratFeed extends React.Component {
 
   gratitudeBasedOnId = (id, gratitudes) => {
     for (let i = 0; i < gratitudes.length; i++) {
-      console.log(id, gratitudes[i].id)
       const intId = parseInt(id)
       const gratId = parseInt(gratitudes[i].id)
       if (gratId === intId) {
@@ -524,7 +512,6 @@ class GratFeed extends React.Component {
   }
 
   onLike = (event) => {
-    console.log(this.state.gratitudes)
     const gratClick = event.target.id
     let grat = {}
     grat = this.gratitudeBasedOnId(gratClick, this.state.gratitudes)
@@ -582,7 +569,6 @@ class GratFeed extends React.Component {
       this.setState({
         gratitude_like: gLCopy
       })
-      console.log(gLCopy)
       return axios({
         url: `${apiUrl}/gratitude_likes/`,
         method: 'POST',
@@ -631,7 +617,6 @@ class GratFeed extends React.Component {
       this.setState({
         gratitude_like: gLCopy
       })
-      console.log(gLCopy)
       return axios({
         url: `${apiUrl}/gratitude_likes/`,
         method: 'POST',
@@ -754,7 +739,6 @@ class GratFeed extends React.Component {
     // get the name of the input that the user typed in
     const gratKey = event.target.name
     // make a copy of the state
-    console.log(userInput)
     const gratCopy = Object.assign({}, this.state.gratitude) // to get the original state of the run and to copy it into another object to bypass inability to assign to a state
     // Object.assign({}, object-to-copy) allows you to combine two objects
     // updating the key in our state with what the user typed in
@@ -811,7 +795,6 @@ class GratFeed extends React.Component {
   handleDeleteSubmit = (event) => {
     const { msgAlert } = this.props
     const gratitudeId = event.target.name
-    console.log(this.state.user)
     axios({
       url: `${apiUrl}/gratitudes/${gratitudeId}/`,
       method: 'DELETE',
@@ -835,11 +818,9 @@ class GratFeed extends React.Component {
       }
       )
       .then(response => {
-        console.log(response.data.gratitudes)
         this.setState({
           gratitudes: response.data.gratitudes
         })
-        console.log(response.data.gratitudes)
       })
       .catch(error => {
         msgAlert({
@@ -908,12 +889,10 @@ class GratFeed extends React.Component {
       const newArray = []
       array.map(comment => {
         let commentOwner = ''
-        console.log('hi')
         for (let i = 0; i < this.state.users.length; i++) {
           if (comment.owner === this.state.users[i].id) {
             commentOwner = this.state.users[i].email
           }
-          console.log(commentOwner)
         }
         newArray.push(
           <div key={comment.id} size="4" className="commentfeed">
@@ -957,10 +936,8 @@ class GratFeed extends React.Component {
           commentArray.push(this.state.comments[j])
         }
       }
-      console.log(commentArray)
       const commentJsx = []
       commentJsx.push(commentToJsx(commentArray))
-      console.log(commentJsx)
       return (
         <div key={gratitude.id} size="4" className="gratfeed">
           <div className='card-header'>

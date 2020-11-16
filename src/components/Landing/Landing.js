@@ -19,7 +19,6 @@ class Landing extends React.Component {
       .catch(console.error)
   } // componentDidMount
   render () {
-    console.log(this.state.image)
     return (
       <div className='landing-image'>
         <img src={this.state.image} alt='mountains'/>

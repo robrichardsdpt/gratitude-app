@@ -8,7 +8,6 @@ import moment from 'moment'
 class GratList extends React.Component {
   constructor (props) {
     super(props)
-    console.log(props)
     this.state = {
       user: this.props.user,
       gratUser: {},
@@ -46,8 +45,6 @@ class GratList extends React.Component {
 
   render () {
     const userEmail = this.state.gratUser.email
-    console.log(this.state.gratUser.email)
-    console.log(this.state.gratUser)
     const usersGratitude = []
     this.state.gratitudes.map(gratitude => {
       if (gratitude.owner === parseInt(this.props.id)) {

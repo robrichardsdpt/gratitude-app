@@ -9,7 +9,6 @@ import { withRouter } from 'react-router-dom'
 class GratCreate extends React.Component {
   constructor (props) {
     super(props)
-    console.log(this.props)
     this.state = {
       user: this.props.user,
       gratitude: {
