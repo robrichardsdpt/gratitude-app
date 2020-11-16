@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 const authenticatedOptions = (
   <Fragment>
-    <Nav.Link href="/#grat-feed">gratFeed</Nav.Link>
+    <Nav.Link href="#grat-feed">gratFeed</Nav.Link>
     <Nav.Link href="#change-password">Change Password</Nav.Link>
     <Nav.Link href="#sign-out">Sign Out</Nav.Link>
   </Fragment>
