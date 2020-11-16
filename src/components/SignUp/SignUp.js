@@ -93,6 +93,7 @@ class SignUp extends Component {
             >
               Submit
             </Button>
+            <p> Password requires 5 characters, containing both letters and numbers. </p>
           </Form>
         </div>
       </div>
