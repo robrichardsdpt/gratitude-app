@@ -21,7 +21,7 @@ class Landing extends React.Component {
   render () {
     return (
       <div className='landing-image'>
-        <img src={this.state.image} alt='mountains'/>
+        <img src={this.state.image} alt='clouds'/>
       </div>
     )
   }

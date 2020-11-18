@@ -1,130 +1,71 @@
-[![General Assembly Logo](https://camo.githubusercontent.com/1a91b05b8f4d44b5bbfb83abac2b0996d8e26c92/687474703a2f2f692e696d6775722e636f6d2f6b6538555354712e706e67)](https://generalassemb.ly/education/web-development-immersive)
+# gratitude
 
-# react-auth-template
+This is a full stack application that connects a React based front end application with a Django/PostgresQL back end database.  The application allows you to create a User, sign in, sign out, and change passwords for a account security.  Once you have an account, you can start sharing your gratitude with others.  You can add a gratitude and interact with those gratitudes with a like and comment feature.
 
-A front-end framework template for starting projects with a recent version of
-either the [Rails API Template](https://git.generalassemb.ly/ga-wdi-boston/rails-api-template)
-or the [Express API Template](https://git.generalassemb.ly/ga-wdi-boston/express-api-template).
+On your profile page, you will see all of your gratitude history.  In later versions, you will be able to see analytics based on your activity, follow others, and to upload a profile picture.
+
+You can edit and deleted any post that you make.  Whether it is a gratitude post or comment.
+
+Throughout the page, you can see gratitude images that were randomly generated from a collection on Unplash using a call to their API.
+
+## Planning Story
+
+The planning process began with the back end.  The first step was to ensure that all authentications were working properly.  This was done using curl-scripts for each individual feature.  Once signed in, a token is generated and allows for full user functionality.  Monitoring of built in django functions allowed for reassurance that the process was working.  After being able to sign in, I was able to move on to gratitude creation and functions.  First, a focus was placed on creation and the model of each gratitude post.  There were not many fields involved, but in order to get the comment and like function, there needed to be interacting models.  This created challenges on the front end since the there were limits to likes and the ability to edit posts/comments that are not owned by that specific user. This will be discussed later.
+
+The next step was to address index, show, update, and delete functionality.  When the user creates a gratitude, the order that it presents would be based on the creation date from the most recent to the first.  I decided to reverse sort by date, so that the index on the UI front would present in descending order, with the most recent gratitude on top.
+
+The show, update, and delete functionality were pretty benign in set up on the back end side. I decided to go with drop down buttons for the user to select edit from, with a modal that pops up with the text field.
+
+My favorite part of this project was to give the power to like and comment.  This was tricky at first.  The like functionality was more involved than the comment functionality.  Using logic on the front end, I was able to limit a user to only 1 like.  If you click the button a second time, it unlikes it.  In future versions, I would like to incorporate a heart that fills to show the user that they have liked a gratitude every time they visit that gratitude.  This would be pretty easy to do, but was not a focus on this version.
+
+For styling the page, I decided to implement a random image API call to unsplash.  I only wanted photos of calming nature to be presented.  I put a query in to the Unsplash API of 'clouds' and it generated a collection of photos that was appropriate. This worked pretty seemlessly.  I am waiting for approval for production status so that I have unlimited calls, but for now 50/hr can be made to unsplash.
+
+## Technologies Used
+    1. React
+    2. html
+    3. JavaScript
+    4. jsx
+    5. Bootstrap/React-Bootstrap
+    6. Python
+    7. Django
+    8. axios
+    9. Passport JS
+    10. MomentJS
+    11. Bcrypt
+    12. CSS/Sass
+    13. SQL/PostgresQL
+
+## User Stories
+    1.  As a user, I would like to sign up on a secure account.
+    2.  As a user, I would like to sign in to a secure account.
+    3.  As a user, I would like to change my password.
+    4.  As a user, I would like to create a post.
+    5.  As a user, I would like to edit a post.
+    6.  As a user, I would like to delete a post.
+    7.  As a user, I would like to view all of my posts, and the posts of others.
+    8.  As a user, I would like to comment on the posts of others.
+    9.  As a user, I would like to be able to like posts and comments.
+
+## Unsolved Problems/Future Versions
+  Unsolved:  API calls to Unsplash and data conversion moved to back-end.
+  Version 2: Remove buttons for users that do not own post or comment
+  Version 3: Follow others
+  Version 4: Interact with other users, Calendar view
+
+## Links
+[Deployed Frontend](https://robrichardsdpt.github.io/gratitude-app/) <br>
+[Deployed Backend](https://gratitude-back-end.herokuapp.com/) <br>
+[Frontend Github Repository](https://github.com/robrichardsdpt/gratitude-app)<br>
+[Backend Github Repository](https://github.com/robrichardsdpt/gratitude-back-end)
 
 ## Installation
+    1.  Fork and clone this repository.
+    2.  Create a new branch, training, for your work.
+    3.  Checkout to the training branch.
+    4.  Install dependencies with npm install.
+    5.  Open the repository in Atom with atom .
 
-1. [Download](../../archive/master.zip) this template.
-1. Unzip and rename the template directory (`unzip ~/Downloads/react-auth-template-master.zip`).
-1. Move into the new project and `git init`.
-1. Empty [`README.md`](README.md) and fill with your own content.
-1. Replace `react-auth-template` in `package.json` with your
-   projects name.
-1. Replace the `"homepage"` field in `package.json` with your (public) Github
-   account name and repository name.
-1. Install dependencies with `npm install`.
-1. `git add` and `git commit` your changes.
-1. Run the development server with `npm start`.
+## Wireframe
 
-## Deployment
 
-Before deploying, you first need to make sure the `homepage` key in your
-`package.json` is pointing to the correct value. It should be the url of your
-deployed application.
-
-To deploy you should first make sure you are on the `master` branch with a
-clean working directory, then you can run `npm run deploy` and wait to see if
-it runs successfully.
-
-## About
-
-This template is derived from GA Boston's [react-template](https://git.generalassemb.ly/ga-wdi-boston/react-template).
-Most of the development dependencies, such as linters, SCSS compiler, Webpack
-config, NPM scripts, etc in this repo come from there.
-
-It includes all the components and routes needed to sign up, sign in, change
-passwords, and sign out of an API built with either template linked above, with
-no need for modification.
-
-**NOTE**: You should customize the included components to suit you app! They're
-provided as a guide and a bare minimum of functionality and style. Consider
-changing the provided SCSS styles, modifying the auth code, improving the flash
-messages, etc.
-
-## Structure
-
-The top-level `App` component stores the currently authenticated
-user in state, as well as data related to the flash messages. `App` renders the
-`Header` component, and a list of routes, each of which render a component from
-`src/components`. The `src/api` directory has a component file, `auth.js`, which
-contains all the needed `axios` calls pertaining to authentication.
-
-You can follow this pattern in your app as well. For instance, if you are making
-an app that keeps track of books, you might want a `src/api/books.js`, which
-contains its own `axios` call pertaining to your books resource CRUD actions.
-Using a separate directory within `components` for each individual component you
-add makes it easy to locate and update components and has the added benefit of
-making it easy to create custom styles that apply to that specific component.
-To apply component specific styles, add a file to the component's directory such
-as `ComponentName.scss` and then import it directly into the component with
-`import './ComponentName.scss'`.  This will keep your styles modularized and
-make it easier to make changes at the component level.
-
-## Features
-
-### `<AuthenticatedRoute />`
-
-This template contains a handy component for creating routes that require a
-user to be authenticated before visiting. This component lives in
-`src/auth/components/AuthenticatedRoute.js` and is already required in `App`.
-It's a thin wrapper around React Router's `<Route />` component. The only
-difference is that it expects a prop called `user`, and if that prop is falsy,
-it will render a `<Redirect />` that takes the user to `/`. **To use
-it, you must pass it the user as a prop!**
-
-It supports both the `component=` and `render=` attributes, but like `<Route />`
-it will not forward props to the component if you use `component=`.
-
-### `<AutoAlertDismiss />` Component
-
-This template also already contains a component that displays user messages.
-Messages are configurable via redux actions.  This component can be found in
-`src/components/AutoAlertDismiss/AutoAlertDismiss.js`. **There is no need to add
-this component to your app. It is already required in `App`.**  A single
-component instance is used to manage all alerts application-wide.
-
-The alert can be used by passing the `alertMsg` method to a rendered route.  The
-`alertMsg` method expects an object with a `heading`, `message`, and a `variant` property.
-
-Use this component in conjunction with the `messages.js` file in the same
-directory to create and manage all of your application messages in one place.
-
-The `variant` property must be a Bootstrap alert variant, as this component is merely a
-wrapper around the [react-bootstrap Alert
-component](https://react-bootstrap.github.io/components/alerts/).  The types it
-will accept are: 'primary', 'secondary', 'success', 'danger', 'warning', 'info',
-'light', and 'dark'.
-
- To change the duration of the message, replace `5000` with a value of your
- choice (in milliseconds) in this component's `componentDidMount` method.
-
-### `src/apiConfig.js`
-
-Just like in
-[browser-template](https://git.generalassemb.ly/ga-wdi-boston/browser-template),
-this file will determine whether you're in a production or development
-environment and choose an API URL accordingly. Don't forget to replace the
-`production` URL with your deployed API's URL.
-
-## Tasks
-
-Developers should run these often!
-
-- `npm run nag`: runs code quality analysis tools on your code and complains.
-- `npm run make-standard`: reformats all your code in the JavaScript Standard
-  Style.
-- `npm run start`: generates bundles, watches, and livereloads.
-- `npm run build`: place bundled styles and scripts where `index.html` can find
-    them
-- `npm run deploy`: builds and deploys master branch
-
-## [License](LICENSE)
-
-1. All content is licensed under a CC­BY­NC­SA 4.0 license.
-1. All software code is licensed under GNU GPLv3. For commercial use or
-    alternative licensing, please contact legal@ga.co.
-# gratitude-app
+## Screenshots
